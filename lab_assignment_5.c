@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Anthony Le
+// COP3502 Lab 4
+
 typedef struct node {
 	char letter;
 	struct node* next;
@@ -9,15 +12,18 @@ typedef struct node {
 // Returns number of nodes in the linkedList.
 int length(node* head)
 {
-   struct node *tmp = head;
-    int len = 0;
-   while (tmp != NULL)
-   {
-      tmp = tmp->next;
-      len++;
-   }
+	int counter = 0;
 
-   return (len);
+	node* temp = head;
+
+	// traverse list and add to counter
+	while(temp!=NULL)
+	{
+		counter++;
+		temp = temp->next;
+	}
+
+	return counter;
 }
 
 // parses the string in the linkedList
@@ -25,6 +31,24 @@ int length(node* head)
 //  then toCString function wil return "abc"
 char* toCString(node* head)
 {
+	// dynamically allocate string of size of linked list
+	int stringLength = length(head);
+	char* string = malloc(sizeof(char)*stringLength);
+
+	node* temp = head;
+
+	// parse linked list letters to string
+	int i;
+	for(i=0; i<stringLength; i++)
+	{
+		string[i] = temp->letter;
+		temp = temp->next;
+	}
+
+	// append null character to end of string
+	string[i] = '\0';
+
+	return string;
 }
 
 // inserts character to the linkedlist
@@ -33,11 +57,39 @@ char* toCString(node* head)
 // head -> |a|->|b|->|c|->|x|
 void insertChar(node** pHead, char c)
 {
+	// create new node with passed character
+	node* newNode = malloc(sizeof(node));
+
+	newNode->letter = c;
+	newNode->next = NULL;
+
+	if(*pHead == NULL)
+		*pHead = newNode;
+	// traverse to end of list and insert new node with char
+	else
+	{
+		node* temp = *pHead;
+
+		while(temp->next!=NULL)
+			temp = temp->next;
+
+		temp->next = newNode;
+	}
 }
 
 // deletes all nodes in the linkedList.
 void deleteList(node** pHead)
 {
+	node* temp = *pHead;
+
+	while(temp!=NULL)
+	{
+		*pHead = temp->next;
+		free(temp);
+		temp = *pHead;
+	}
+
+	*pHead = NULL;
 }
 
 int main(void)
